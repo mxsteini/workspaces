@@ -90,6 +90,20 @@ meson build --prefix=/home/mst/
 cd build
 sudo ninja install && com.github.devalien.workspaces
 ```
+local setup
+```bash
+meson setup --reconfigure --prefix=/home/mst build
+```
+
+local compile
+```bash
+pushd build && meson compile && ./com.github.devalien.workspaces; popd
+```
+
+local install
+```bash
+pushd build && ninja install && com.github.devalien.workspaces; popd
+```
 
 
 ## Generating pot file
