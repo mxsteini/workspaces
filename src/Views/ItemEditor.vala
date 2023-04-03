@@ -71,6 +71,7 @@ public class Workspaces.Views.ItemEditor : Gtk.Box {
     private Gtk.Entry name_entry;
     private Gtk.Switch auto_start_switch;
     private Gtk.Switch run_in_terminal_switch;
+    private Gtk.Switch use_workspace_directory_switch;
     private Gtk.Button delete_button;
     private Granite.Widgets.Toast toast;
     private Gtk.Grid settings_grid;
@@ -156,9 +157,25 @@ public class Workspaces.Views.ItemEditor : Gtk.Box {
             item.item.run_in_terminal = run_in_terminal_switch.state;
             Workspaces.Application.instance.workspaces_controller.save ();
         });
+
         var run_box = new Workspaces.Widgets.SettingBox (_ ("Run in terminal"), run_in_terminal_switch, false);
+
+        use_workspace_directory_switch = new Gtk.Switch ();
+        use_workspace_directory_switch.set_valign (Gtk.Align.CENTER);
+        use_workspace_directory_switch.halign = Gtk.Align.END;
+        use_workspace_directory_switch.margin_start = 8;
+        use_workspace_directory_switch.margin_end = 8;
+        use_workspace_directory_switch.hexpand = true;
+        use_workspace_directory_switch.notify["active"].connect (() => {
+            item.item.use_workspace_directory = use_workspace_directory_switch.state;
+            Workspaces.Application.instance.workspaces_controller.save ();
+        });
+
+        var use_workspace_directory_box = new Workspaces.Widgets.SettingBox (_ ("Use workspace directory"), use_workspace_directory_switch, false);
+
         settings_sg.add_widget (auto_box);
         settings_sg.add_widget (run_box);
+        settings_sg.add_widget (use_workspace_directory_box);
 
         settings_grid = new Gtk.Grid ();
         settings_grid.row_spacing = 12;
@@ -557,6 +574,7 @@ public class Workspaces.Views.ItemEditor : Gtk.Box {
 
         auto_start_switch.set_state (item.item.auto_start);
         run_in_terminal_switch.set_state (item.item.run_in_terminal);
+        use_workspace_directory_switch.set_state (item.item.use_workspace_directory);
         load_widgets_by_type (item.item.item_type);
     }
 }

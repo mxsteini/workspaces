@@ -28,6 +28,7 @@ public class Workspaces.Models.Item : Object {
     public string url { get; set; }
     public bool auto_start { get; set; }
     public bool run_in_terminal { get; set; }
+    public bool use_workspace_directory { get; set; }
     public Workspaces.Models.AppInfo app_info {get; set;}
     public string directory {get; set;}
 
@@ -38,6 +39,7 @@ public class Workspaces.Models.Item : Object {
         this.command = "";
         this.item_type = "Custom";
         this.run_in_terminal = false;
+        this.use_workspace_directory = true;
         this.auto_start = false;
     }
 
