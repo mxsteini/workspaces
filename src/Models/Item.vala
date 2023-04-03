@@ -117,7 +117,7 @@ public class Workspaces.Models.Item : Object {
         }
 
         if (run_in_terminal) {
-            c = "x-terminal-emulator -e \"%s\"".printf (c.replace ("\"", "\\\""));
+            c = "gnome-terminal -- bash -c \"%s\"".printf (c.replace ("\"", "\\\""));
         }
         return c;
     }
