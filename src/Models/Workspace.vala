@@ -26,6 +26,7 @@ public class Workspaces.Models.Workspace : GLib.Object, Json.Serializable {
     public string id { get; set; }
     public string name { get; set; }
     public string icon { get; set; }
+    public string directory {get; set;}
     public ArrayList<Workspaces.Models.Item> items { get; set; }
     public signal void changed (Workspaces.Models.Workspace workspace);
     public signal void item_added (Workspaces.Models.Item item);

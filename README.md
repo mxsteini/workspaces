@@ -85,7 +85,7 @@ git clone git@github.com:DevAlien/workspaces.git workspaces
 # cd to dir
 cd workspaces
 # run meson
-meson build --prefix=/usr
+meson build --prefix=/home/mst/
 # cd to build, build and test
 cd build
 sudo ninja install && com.github.devalien.workspaces

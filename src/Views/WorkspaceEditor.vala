@@ -28,6 +28,7 @@ public class Workspaces.Views.WorkspaceEditor : Gtk.Box {
     private Gtk.Button delete_button;
 
     private Gtk.Entry name_entry;
+    private Gtk.Entry directory_entry;
 
     construct {
         get_style_context ().add_class ("item-editor");
@@ -60,6 +61,53 @@ public class Workspaces.Views.WorkspaceEditor : Gtk.Box {
         header_box.add (name_entry);
         name_box.add (header_box);
 
+
+     // directory
+        var directory_entry_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
+        directory_entry_box.margin_start = 8;
+        directory_entry_box.margin_end = 8;
+        directory_entry_box.hexpand = true;
+
+        directory_entry = new Workspaces.Widgets.Entry ();
+        directory_entry.placeholder_text = _ ("Path to the directory");
+        directory_entry.hexpand = true;
+        directory_entry.changed.connect (() => {
+            workspace.workspace.directory = directory_entry.get_text ();
+            Workspaces.Application.instance.workspaces_controller.save ();
+        });
+
+        var directory_button = new Gtk.Button.with_label (_ ("Choose Directory"));
+        directory_button.clicked.connect ( () => {
+            var file_chooser = new Gtk.FileChooserDialog (
+                _ ("Select an image"), Application.instance.preferences_window, Gtk.FileChooserAction.SELECT_FOLDER,
+                "_Cancel",
+                Gtk.ResponseType.CANCEL,
+                "_Open",
+                Gtk.ResponseType.ACCEPT
+                );
+            file_chooser.response.connect ((response) => {
+                if (response == Gtk.ResponseType.ACCEPT) {
+                    string uri = file_chooser.get_filename ();
+                    workspace.workspace.directory = uri;
+                    directory_entry.text = uri;
+                    Workspaces.Application.instance.workspaces_controller.save ();
+                }
+
+                file_chooser.destroy ();
+            });
+
+            file_chooser.run ();
+        });
+        directory_entry_box.add (directory_entry);
+        directory_entry_box.add (directory_button);
+        var directory_box = new Workspaces.Widgets.SettingBox (_ ("Directory to open"), directory_entry_box, false);
+        //  url_settings_grid.add_widget (application_box);
+
+        var directory_settings_grid = new Workspaces.Widgets.SettingsGrid (_ ("Directory Settings"));
+        directory_settings_grid.add_widget (directory_box);
+
+
+
         var header_grid = new Gtk.Grid ();
         header_grid.column_spacing = 12;
         header_grid.row_spacing = 6;
@@ -68,6 +116,7 @@ public class Workspaces.Views.WorkspaceEditor : Gtk.Box {
         header_grid.margin_top = 24;
         header_grid.attach (icon_button, 0, 0, 1, 1);
         header_grid.attach (name_box, 1, 0, 1, 1);
+        header_grid.attach (directory_settings_grid, 1, 1, 1, 1);
 
         var scrolled = new Gtk.ScrolledWindow (null, null);
         scrolled.expand = true;
@@ -116,6 +165,12 @@ public class Workspaces.Views.WorkspaceEditor : Gtk.Box {
             } catch (Error e) {
                 debug (e.message);
             }
+        }
+
+        if (workspace.workspace.directory == null) {
+            directory_entry.set_text ("");
+        } else {
+             directory_entry.set_text (workspace.workspace.directory);
         }
 
         name_entry.set_text (workspace.workspace.name);
