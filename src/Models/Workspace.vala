@@ -89,6 +89,8 @@ public class Workspaces.Models.Workspace : GLib.Object, Json.Serializable {
             foreach ( var n in node_arr ) {
                 if ( n.get_node_type () == Json.NodeType.OBJECT ) {
                     var asd = Json.gobject_deserialize (typeof (Workspaces.Models.Item), n) as Workspaces.Models.Item;
+                    asd.workspace_name = this.name;
+                    asd.workspace_directory = this.directory;
                     ws.add (asd);
                 }
             }

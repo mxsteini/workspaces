@@ -22,6 +22,8 @@
 public class Workspaces.Models.Item : Object {
     public string id { get; set; }
     public string name { get; set; }
+    public string workspace_name { get; set; }
+    public string workspace_directory { get; set; }
     public string icon { get; set; }
     public string item_type { get; set; }
     public string command { get; set; }
@@ -54,7 +56,12 @@ public class Workspaces.Models.Item : Object {
             info ("Command to launch: %s".printf (to_run_command));
             string[] env = Environ.get ();
 
-            string cdir = GLib.Environment.get_home_dir ();
+            string cdir = "";
+            if (this.use_workspace_directory) {
+                cdir = this.workspace_directory;
+            } else {
+                cdir = GLib.Environment.get_home_dir ();
+            }
             Process.spawn_async (cdir,
                                  argvp,
                                  env,
